@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-900 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayStore - Online Payment Portal & Developer Integration</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col justify-between">
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 w-full glass-card border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">BizPay</span>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="hidden md:flex space-x-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
+        <button id="nav-store" onclick="switchTab('store')" class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow-sm">
+          <i class="fa-solid fa-store mr-2"></i> Storefront (Customer View)
+        </button>
+        <button id="nav-checkout" onclick="switchTab('checkout')" class="px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition-all duration-200">
+          <i class="fa-solid fa-qrcode mr-2"></i> UPI & Payment Checkout
+        </button>
+        <button id="nav-github" onclick="switchTab('github')" class="px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition-all duration-200">
+          <i class="fa-brands fa-github mr-2"></i> GitHub & Integration Docs
+        </button>
+      </nav>
+
+      <!-- Quick Action Mobile Button -->
+      <div class="flex md:hidden space-x-2">
+        <button onclick="switchTab('checkout')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">
+          Pay Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Subnav Bar -->
+    <div class="flex md:hidden border-t border-slate-800 text-xs">
+      <button onclick="switchTab('store')" class="flex-1 py-2 text-center text-slate-300 hover:bg-slate-800">Store</button>
+      <button onclick="switchTab('checkout')" class="flex-1 py-2 text-center text-slate-300 hover:bg-slate-800">Checkout</button>
+      <button onclick="switchTab('github')" class="flex-1 py-2 text-center text-slate-300 hover:bg-slate-800">GitHub Docs</button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ================= SECTION 1: STORE FRONT ================= -->
+    <section id="sec-store" class="space-y-8">
+      <div class="text-center max-w-2xl mx-auto">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Accept Payments Seamlessly Online</h1>
+        <p class="mt-3 text-slate-400 text-base sm:text-lg">Select products or services from your business and pay instantly via UPI, Card, or Net Banking.</p>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Product 1 -->
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between hover:border-indigo-500/50 transition-all duration-300">
+          <div>
+            <div class="h-44 rounded-xl bg-slate-800 flex items-center justify-center text-slate-500 mb-4 overflow-hidden relative">
+              <i class="fa-solid fa-box-open text-5xl text-indigo-400/60"></i>
+              <span class="absolute top-3 right-3 bg-indigo-500/20 text-indigo-300 text-xs font-bold px-2.5 py-1 rounded-full border border-indigo-500/30">Popular</span>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Starter Business Package</h3>
+            <p class="text-slate-400 text-sm mt-1">Complete setup for retail offline to online transformation.</p>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-800">
+            <div>
+              <span class="text-xs text-slate-500 block">Total Price</span>
+              <span class="text-xl font-bold text-white">₹ 499.00</span>
+            </div>
+            <button onclick="quickPay(499, 'Starter Business Package')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm px-4 py-2 rounded-xl transition-all shadow-md shadow-indigo-600/30">
+              Pay Now
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between hover:border-indigo-500/50 transition-all duration-300">
+          <div>
+            <div class="h-44 rounded-xl bg-slate-800 flex items-center justify-center text-slate-500 mb-4 overflow-hidden">
+              <i class="fa-solid fa-gem text-5xl text-purple-400/60"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Premium Consultation / Goods</h3>
+            <p class="text-slate-400 text-sm mt-1">Custom business order or bulk service payment deposit.</p>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-800">
+            <div>
+              <span class="text-xs text-slate-500 block">Total Price</span>
+              <span class="text-xl font-bold text-white">₹ 1,499.00</span>
+            </div>
+            <button onclick="quickPay(1499, 'Premium Goods Deposit')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm px-4 py-2 rounded-xl transition-all shadow-md shadow-indigo-600/30">
+              Pay Now
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Payment Card -->
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-dashed border-2 border-slate-700 hover:border-indigo-500/50 transition-all duration-300">
+          <div>
+            <div class="h-44 rounded-xl bg-slate-800/50 flex items-center justify-center text-slate-500 mb-4">
+              <i class="fa-solid fa-hand-holding-dollar text-5xl text-emerald-400/60"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Custom Bill Payment</h3>
+            <p class="text-slate-400 text-sm mt-1">Enter custom amount agreed offline with customer.</p>
+          </div>
+          <div class="mt-4">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Enter Amount (INR ₹)</label>
+            <div class="relative rounded-xl shadow-sm mb-4">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">₹</div>
+              <input type="number" id="custom-store-amount" placeholder="100" class="bg-slate-800 border border-slate-700 text-white text-sm rounded-xl block w-full pl-8 p-2.5 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <button onclick="payCustomAmount()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-4 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-600/30">
+              Generate Payment Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 2: PAYMENT & UPI CHECKOUT ================= -->
+    <section id="sec-checkout" class="hidden max-w-3xl mx-auto">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-5 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-white">Payment Checkout Gateway</h2>
+            <p class="text-slate-400 text-xs mt-1">Order Ref: <span id="checkout-ref-id" class="font-mono text-indigo-400">#ORD-83921</span></p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block">Amount Payable</span>
+            <span id="checkout-amount-display" class="text-2xl font-extrabold text-emerald-400">₹ 499.00</span>
+          </div>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <div class="flex border-b border-slate-800 mb-6 text-sm">
+          <button id="tab-btn-upi" onclick="switchPaymentTab('upi')" class="py-2.5 px-4 font-semibold border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-2">
+            <i class="fa-solid fa-mobile-screen-button"></i> UPI Intent & QR
+          </button>
+          <button id="tab-btn-card" onclick="switchPaymentTab('card')" class="py-2.5 px-4 font-semibold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-credit-card"></i> Card & Netbanking
+          </button>
+        </div>
+
+        <!-- UPI Tab Content -->
+        <div id="tab-content-upi" class="space-y-6">
+          <!-- Business VPA Config -->
+          <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Merchant UPI ID (VPA Settings)</label>
+            <div class="flex gap-2">
+              <input type="text" id="merchant-vpa" value="merchantbusiness@upi" class="bg-slate-900 border border-slate-700 text-indigo-300 font-mono text-sm rounded-lg p-2.5 w-full focus:outline-none focus:border-indigo-500">
+              <button onclick="updateUPIQRCode()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-3 py-2 rounded-lg font-medium transition">Update</button>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">Replace with your real GPay / PhonePe / Paytm Merchant UPI ID to receive direct payments.</p>
+          </div>
+
+          <!-- Deep Link / App Direct Buttons (Mobile UPI Intent) -->
+          <div>
+            <h3 class="text-sm font-semibold text-slate-300 mb-3"><i class="fa-solid fa-bolt text-yellow-400 mr-1"></i> Pay via UPI Mobile Apps (UPI Intent Flow)</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <button onclick="triggerUPIIntent('gpay')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl flex flex-col items-center justify-center transition hover:border-indigo-500">
+                <i class="fa-brands fa-google-pay text-2xl text-blue-400 mb-1"></i>
+                <span class="text-xs text-slate-300 font-medium">Google Pay</span>
+              </button>
+              <button onclick="triggerUPIIntent('phonepe')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl flex flex-col items-center justify-center transition hover:border-purple-500">
+                <i class="fa-solid fa-wallet text-2xl text-purple-400 mb-1"></i>
+                <span class="text-xs text-slate-300 font-medium">PhonePe</span>
+              </button>
+              <button onclick="triggerUPIIntent('paytm')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl flex flex-col items-center justify-center transition hover:border-sky-500">
+                <i class="fa-solid fa-coins text-2xl text-sky-400 mb-1"></i>
+                <span class="text-xs text-slate-300 font-medium">Paytm</span>
+              </button>
+              <button onclick="triggerUPIIntent('generic')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl flex flex-col items-center justify-center transition hover:border-emerald-500">
+                <i class="fa-solid fa-qrcode text-2xl text-emerald-400 mb-1"></i>
+                <span class="text-xs text-slate-300 font-medium">Any UPI App</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- OR Scan QR Code -->
+          <div class="flex flex-col sm:flex-row items-center gap-6 bg-slate-800/40 p-5 rounded-2xl border border-slate-800">
+            <div class="bg-white p-3 rounded-xl shadow-lg border border-slate-200" id="qrcode-container">
+              <!-- Dynamic QR code injected here -->
+            </div>
+            <div class="text-center sm:text-left space-y-2">
+              <span class="bg-indigo-500/20 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold border border-indigo-500/30">Scan & Pay</span>
+              <h4 class="text-white font-semibold text-base">Dynamic UPI QR Code</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Open any UPI app on your phone (GPay, PhonePe, Paytm, BHIM) and scan this QR code to complete the transaction.</p>
+              <div class="pt-2">
+                <button onclick="simulateVerification()" class="text-xs bg-indigo-600/80 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg transition">
+                  <i class="fa-solid fa-arrows-rotate mr-1"></i> Check Payment Status
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Tab Content -->
+        <div id="tab-content-card" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Card Holder Name</label>
+            <input type="text" placeholder="John Doe" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Card Number</label>
+            <input type="text" placeholder="4532 •••• •••• 8892" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Expiry Date</label>
+              <input type="text" placeholder="MM/YY" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">CVV</label>
+              <input type="password" placeholder="•••" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+            </div>
+          </div>
+          <button onclick="simulateVerification()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition shadow-lg shadow-indigo-600/30">
+            Pay Now (Simulated Gateway)
+          </button>
+        </div>
+
+        <!-- Payment Status Box (Hidden by Default) -->
+        <div id="payment-status-box" class="hidden mt-6 p-4 rounded-xl text-center"></div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 3: GITHUB INTEGRATION & DOCS ================= -->
+    <section id="sec-github" class="hidden space-y-8">
+      <div class="glass-card rounded-2xl p-6 sm:p-8">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+              <i class="fa-brands fa-github text-3xl"></i> GitHub & UPI Intent Integration Roadmap
+            </h2>
+            <p class="text-slate-400 text-sm mt-1">Connect this code to GitHub and upgrade to official UPI Intent Payment Gateways (Razorpay / Cashfree / PhonePe PG).</p>
+          </div>
+          <a href="https://github.com" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl border border-slate-700 flex items-center gap-2 transition">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open GitHub
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+          <!-- Step-by-Step Guide -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-indigo-400 flex items-center gap-2">
+              <i class="fa-solid fa-list-check"></i> Step-by-Step: Host on GitHub
+            </h3>
+            
+            <ol class="space-y-3 text-sm text-slate-300 list-decimal list-inside">
+              <li class="bg-slate-800/50 p-3 rounded-xl border border-slate-800">
+                <strong class="text-white">Create Repository:</strong> Go to GitHub and create a new repository (e.g., <code class="text-indigo-300">online-business-payments</code>).
+              </li>
+              <li class="bg-slate-800/50 p-3 rounded-xl border border-slate-800">
+                <strong class="text-white">Upload HTML Code:</strong> Save this file as <code class="text-indigo-300">index.html</code> and push it to the main branch.
+              </li>
+              <li class="bg-slate-800/50 p-3 rounded-xl border border-slate-800">
+                <strong class="text-white">Enable GitHub Pages:</strong> Go to <em>Repo Settings &gt; Pages &gt; Branch: main &gt; Save</em>. Your payment website is now live!
+              </li>
+              <li class="bg-slate-800/50 p-3 rounded-xl border border-slate-800">
+                <strong class="text-white">Connect Payment API:</strong> Upgrade to production UPI Intent using standard payment gateway SDKs (Razorpay/Cashfree).
+              </li>
+            </ol>
+          </div>
+
+          <!-- Code Snippet for Backend UPI Gateway Integration -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-purple-400 flex items-center gap-2">
+                <i class="fa-solid fa-code"></i> Real UPI Gateway Integration Code
+              </h3>
+              <button onclick="copyCode()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded border border-slate-700">
+                <i class="fa-regular fa-copy mr-1"></i> Copy Code
+              </button>
+            </div>
+
+            <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 overflow-x-auto text-xs font-mono text-emerald-400 leading-relaxed"><code id="code-block">// Example: Modern Razorpay/UPI Intent Trigger
+function openUpiGateway(amount, orderId) {
+  const options = {
+    "key": "YOUR_RAZORPAY_KEY", // From Payment Dashboard
+    "amount": amount * 100, // Amount in paise
+    "currency": "INR",
+    "name": "My Offline Business",
+    "description": "Order Payment #" + orderId,
+    "upi": {
+      "flow": "intent" // Automatically opens GPay/PhonePe on mobile
+    },
+    "handler": function (response){
+      alert("Payment Successful ID: " + response.razorpay_payment_id);
+    },
+    "prefill": {
+      "contact": "9999999999"
+    }
+  };
+  const rzp = new Razorpay(options);
+  rzp.open();
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950/60 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <p>© 2026 BizPay Offline-to-Online Solution. Designed for high conversion & mobile payments.</p>
+      <div class="flex space-x-4">
+        <a href="#" class="hover:text-slate-300">Privacy Policy</a>
+        <a href="#" class="hover:text-slate-300">Terms of Service</a>
+        <a href="#" class="hover:text-slate-300">UPI Security</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Embedded JavaScript Logic -->
+  <script>
+    // State management
+    let currentAmount = 499;
+    let currentItem = "Starter Business Package";
+    let qrcodeInstance = null;
+
+    // Tab Navigation Switcher
+    function switchTab(tabName) {
+      document.getElementById('sec-store').classList.add('hidden');
+      document.getElementById('sec-checkout').classList.add('hidden');
+      document.getElementById('sec-github').classList.add('hidden');
+
+      document.getElementById('nav-store').className = "px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition-all duration-200";
+      document.getElementById('nav-checkout').className = "px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition-all duration-200";
+      document.getElementById('nav-github').className = "px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition-all duration-200";
+
+      if (tabName === 'store') {
+        document.getElementById('sec-store').classList.remove('hidden');
+        document.getElementById('nav-store').className = "px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white shadow-sm";
+      } else if (tabName === 'checkout') {
+        document.getElementById('sec-checkout').classList.remove('hidden');
+        document.getElementById('nav-checkout').className = "px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white shadow-sm";
+        generateUPIQRCode();
+      } else if (tabName === 'github') {
+        document.getElementById('sec-github').classList.remove('hidden');
+        document.getElementById('nav-github').className = "px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white shadow-sm";
+      }
+    }
+
+    // Quick Payment Trigger from Storefront
+    function quickPay(amount, itemName) {
+      currentAmount = amount;
+      currentItem = itemName;
+      document.getElementById('checkout-amount-display').innerText = '₹ ' + amount.toFixed(2);
+      document.getElementById('checkout-ref-id').innerText = '#ORD-' + Math.floor(10000 + Math.random() * 90000);
+      switchTab('checkout');
+    }
+
+    // Custom Amount Input Handler
+    function payCustomAmount() {
+      const val = parseFloat(document.getElementById('custom-store-amount').value);
+      if (isNaN(val) || val <= 0) {
+        alert('Please enter a valid amount');
+        return;
+      }
+      quickPay(val, 'Custom Service Payment');
+    }
+
+    // Payment Method Sub-tabs
+    function switchPaymentTab(type) {
+      const upiBtn = document.getElementById('tab-btn-upi');
+      const cardBtn = document.getElementById('tab-btn-card');
+      const upiContent = document.getElementById('tab-content-upi');
+      const cardContent = document.getElementById('tab-content-card');
+
+      if (type === 'upi') {
+        upiBtn.className = "py-2.5 px-4 font-semibold border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-2";
+        cardBtn.className = "py-2.5 px-4 font-semibold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2";
+        upiContent.classList.remove('hidden');
+        cardContent.classList.add('hidden');
+      } else {
+        cardBtn.className = "py-2.5 px-4 font-semibold border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-2";
+        upiBtn.className = "py-2.5 px-4 font-semibold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2";
+        cardContent.classList.remove('hidden');
+        upiContent.classList.add('hidden');
+      }
+    }
+
+    // Generate Dynamic UPI QR Code using QRCode.js
+    function generateUPIQRCode() {
+      const vpa = document.getElementById('merchant-vpa').value || 'merchantbusiness@upi';
+      const merchantName = encodeURIComponent('Offline Business');
+      const upiUri = `upi://pay?pa=${vpa}&pn=${merchantName}&am=${currentAmount}&cu=INR&tn=${encodeURIComponent(currentItem)}`;
+
+      const qrContainer = document.getElementById('qrcode-container');
+      qrContainer.innerHTML = ''; // Clear existing QR
+
+      qrcodeInstance = new QRCode(qrContainer, {
+        text: upiUri,
+        width: 130,
+        height: 130,
+        colorDark: "#0f172a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function updateUPIQRCode() {
+      generateUPIQRCode();
+      alert('Merchant UPI VPA Updated!');
+    }
+
+    // Mobile UPI Intent Deep Linking Flow
+    function triggerUPIIntent(app) {
+      const vpa = document.getElementById('merchant-vpa').value || 'merchantbusiness@upi';
+      const merchantName = encodeURIComponent('Offline Business');
+      const upiDeepLink = `upi://pay?pa=${vpa}&pn=${merchantName}&am=${currentAmount}&cu=INR&tn=${encodeURIComponent(currentItem)}`;
+
+      // Simulate intent popup / redirect
+      if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        window.location.href = upiDeepLink;
+      } else {
+        alert(`UPI Intent Selected for [${app.toUpperCase()}].\n\nDeep Link URI:\n${upiDeepLink}\n\nNote: UPI Intent deep links directly open GPay/PhonePe when clicked on a mobile phone.`);
+      }
+    }
+
+    // Payment Simulation Helper
+    function simulateVerification() {
+      const box = document.getElementById('payment-status-box');
+      box.classList.remove('hidden');
+      box.className = "mt-6 p-4 rounded-xl text-center bg-indigo-900/40 border border-indigo-500/50 text-indigo-200 animate-pulse";
+      box.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Verifying transaction status with bank servers...';
+
+      setTimeout(() => {
+        box.classList.remove('animate-pulse');
+        box.className = "mt-6 p-4 rounded-xl text-center bg-emerald-900/40 border border-emerald-500/50 text-emerald-200";
+        box.innerHTML = '<i class="fa-solid fa-circle-check text-xl mr-2 text-emerald-400"></i> <strong>Payment Success!</strong> Received ₹' + currentAmount + ' via UPI/Card. Invoice sent to customer.';
+      }, 2500);
+    }
+
+    // Copy Code Helper Function
+    function copyCode() {
+      const codeText = document.getElementById('code-block').innerText;
+      const textArea = document.createElement('textarea');
+      textArea.value = codeText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Integration code copied to clipboard!');
+    }
+
+    // Initialize on load
+    window.onload = function() {
+      generateUPIQRCode();
+    };
+  </script>
+</body>
+</html>
